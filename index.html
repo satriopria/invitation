@@ -179,15 +179,42 @@
   .guest-greeting, .guest-greeting-name { display: none !important; }
   .no-guest-name { display: none; }
   .floral-left, .floral-right {
-    position: absolute;
-    font-size: 8rem;
-    opacity: 0.06;
-    pointer-events: none;
-    font-family: serif;
-    will-change: transform;
+    position: absolute; pointer-events: none; will-change: transform; opacity: 0.12;
   }
-  .floral-left { bottom: 5%; left: -2%; transform: rotate(-20deg); }
-  .floral-right { top: 10%; right: -2%; transform: rotate(20deg); }
+  .floral-left  { bottom: 3%; left: -1%;  width: 220px; }
+  .floral-right { top:    8%; right: -1%; width: 180px; }
+
+  .ornament-wrap {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column; align-items: center;
+    margin-bottom: 16px;
+    opacity: 0; animation: fadeUp .8s .15s forwards;
+  }
+  .ornament-svg {
+    width: 48px; height: 48px; margin-bottom: 10px;
+    animation: spinSlow 18s linear infinite;
+    opacity: 0.75;
+  }
+  .ornament {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem; letter-spacing: 6px; text-transform: uppercase;
+    color: var(--gold); margin: 0; opacity: 1; animation: none;
+  }
+  .petal {
+    position: absolute; pointer-events: none;
+    font-size: 1rem; opacity: 0;
+    animation: floatPetal linear infinite;
+    will-change: transform, opacity;
+  }
+  @keyframes spinSlow {
+    from { transform: rotate(0deg); } to { transform: rotate(360deg); }
+  }
+  @keyframes floatPetal {
+    0%   { opacity: 0;   transform: translateY(0)     rotate(0deg)   scale(0.8); }
+    10%  { opacity: 0.5; }
+    90%  { opacity: 0.3; }
+    100% { opacity: 0;   transform: translateY(-80vh) rotate(360deg) scale(1.1); }
+  }
 
   /* ---- SCROLL REVEAL ---- */
   .reveal {
@@ -589,6 +616,60 @@
   }
   footer p { font-size: 0.75rem; color: rgba(250,247,242,0.3); letter-spacing: 2px; }
 
+  /* ---- COUNTDOWN ---- */
+  .countdown-grid {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; flex-wrap: wrap; margin-top: 8px;
+  }
+  .cd-box {
+    display: flex; flex-direction: column; align-items: center;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 20px 28px; min-width: 88px;
+  }
+  .cd-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 300; color: var(--gold); line-height: 1; display: block;
+  }
+  .cd-label {
+    font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(250,247,242,0.4); margin-top: 6px;
+  }
+  .cd-sep {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem; color: var(--gold); opacity: 0.4;
+    padding-bottom: 20px; line-height: 1;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0.1; } }
+
+  /* ---- DOA ---- */
+  .doa-grid {
+    max-width: 860px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  }
+  .doa-card {
+    background: white; border: 1px solid rgba(201,168,76,0.25);
+    padding: 36px 28px; text-align: center; position: relative;
+  }
+  .doa-card::before {
+    content: ''; position: absolute;
+    top: 6px; left: 6px; right: -6px; bottom: -6px;
+    border: 1px solid rgba(201,168,76,0.1); pointer-events: none;
+  }
+  .doa-icon { font-size: 2rem; color: var(--gold); opacity: 0.5; margin-bottom: 16px; display: block; }
+  .doa-arabic {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem; line-height: 2; color: var(--dark);
+    margin-bottom: 16px; direction: rtl;
+  }
+  .doa-terjemah {
+    font-size: 0.88rem; color: var(--muted);
+    line-height: 1.8; font-style: italic; margin-bottom: 16px;
+  }
+  .doa-source { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); }
+
   /* ---- ANIMATIONS ---- */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
@@ -612,6 +693,9 @@
     .event-cards { grid-template-columns: 1fr; }
     .stats-grid { grid-template-columns: 1fr 1fr; }
     .rsvp-radio-group { grid-template-columns: 1fr; }
+    .doa-grid { grid-template-columns: 1fr; }
+    .cd-box { padding: 16px 18px; min-width: 68px; }
+    .cd-sep { font-size: 1.8rem; }
   }
 
   .empty-state {
@@ -638,6 +722,7 @@
   <div class="nav-links">
     <a href="#pasangan">Pasangan</a>
     <a href="#acara">Acara</a>
+    <a href="#doa">Doa</a>
     <a href="#rsvp">RSVP</a>
   </div>
 </nav>
@@ -647,14 +732,64 @@
   <!-- Parallax background layers -->
   <div class="parallax-layer parallax-dots" data-speed="0.3"></div>
   <div class="parallax-layer parallax-ring" data-speed="0.15"></div>
-  <div class="floral-left" data-speed="0.4">✿</div>
-  <div class="floral-right" data-speed="0.25">✿</div>
+
+  <!-- Animated SVG florals -->
+  <div class="floral-left">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="animation:spinSlow 30s linear infinite reverse;display:block;width:100%">
+      <g fill="none" stroke="#c9a84c" stroke-width="1">
+        <ellipse cx="100" cy="60" rx="18" ry="42" transform="rotate(0   100 100)"/>
+        <ellipse cx="100" cy="60" rx="18" ry="42" transform="rotate(45  100 100)"/>
+        <ellipse cx="100" cy="60" rx="18" ry="42" transform="rotate(90  100 100)"/>
+        <ellipse cx="100" cy="60" rx="18" ry="42" transform="rotate(135 100 100)"/>
+        <ellipse cx="100" cy="60" rx="18" ry="42" transform="rotate(180 100 100)"/>
+        <ellipse cx="100" cy="60" rx="18" ry="42" transform="rotate(225 100 100)"/>
+        <ellipse cx="100" cy="60" rx="18" ry="42" transform="rotate(270 100 100)"/>
+        <ellipse cx="100" cy="60" rx="18" ry="42" transform="rotate(315 100 100)"/>
+        <circle cx="100" cy="100" r="12" stroke-width="1.5"/>
+        <circle cx="100" cy="100" r="22" stroke-dasharray="4 6"/>
+      </g>
+    </svg>
+  </div>
+  <div class="floral-right">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="animation:spinSlow 24s linear infinite;display:block;width:100%">
+      <g fill="none" stroke="#c9a84c" stroke-width="1">
+        <ellipse cx="100" cy="55" rx="14" ry="38" transform="rotate(0   100 100)"/>
+        <ellipse cx="100" cy="55" rx="14" ry="38" transform="rotate(60  100 100)"/>
+        <ellipse cx="100" cy="55" rx="14" ry="38" transform="rotate(120 100 100)"/>
+        <ellipse cx="100" cy="55" rx="14" ry="38" transform="rotate(180 100 100)"/>
+        <ellipse cx="100" cy="55" rx="14" ry="38" transform="rotate(240 100 100)"/>
+        <ellipse cx="100" cy="55" rx="14" ry="38" transform="rotate(300 100 100)"/>
+        <circle cx="100" cy="100" r="10"/>
+        <circle cx="100" cy="100" r="20" stroke-dasharray="3 5"/>
+        <circle cx="100" cy="100" r="32" stroke-dasharray="1 8"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Floating petals container -->
+  <div id="petals" style="position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0"></div>
 
   <!-- Hidden legacy elements (kept for JS compat) -->
   <div class="guest-greeting no-guest-name" id="guestGreetingLabel">Kepada Yth.</div>
   <div class="guest-greeting-name no-guest-name" id="guestGreetingName"></div>
 
-  <div class="ornament">Undangan Pernikahan</div>
+  <!-- Ornamen berputar -->
+  <div class="ornament-wrap">
+    <svg class="ornament-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="#c9a84c" stroke-width="1.2">
+        <ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(0   50 50)"/>
+        <ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(45  50 50)"/>
+        <ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(90  50 50)"/>
+        <ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(135 50 50)"/>
+        <ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(180 50 50)"/>
+        <ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(225 50 50)"/>
+        <ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(270 50 50)"/>
+        <ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(315 50 50)"/>
+        <circle cx="50" cy="50" r="6" fill="rgba(201,168,76,0.2)"/>
+      </g>
+    </svg>
+    <div class="ornament">Undangan Pernikahan</div>
+  </div>
   <div class="hero-divider"></div>
   <h1 style="opacity:0;animation:fadeUp .8s .4s forwards">
     Satrio
@@ -669,8 +804,27 @@
   </div>
 
   <div class="hero-subtitle" style="animation-delay:.6s">Dengan rendah hati dan penuh syukur kepada Allah</div>
-  <div class="hero-date">Sabtu, 14 Juni 2025</div>
+  <div class="hero-date">Ahad, 12 April 2026</div>
   <div class="hero-scroll">Gulir ke bawah</div>
+</section>
+
+<!-- COUNTDOWN -->
+<section id="countdown" style="background:var(--dark);padding:72px 20px;text-align:center">
+  <div class="reveal">
+    <div class="section-tag" style="color:var(--gold-light)">Menuju Hari Bahagia</div>
+    <div class="section-title" style="color:var(--cream);margin-bottom:8px">Ahad, 12 April 2026</div>
+    <div class="thin-rule" style="background:var(--gold)"></div>
+  </div>
+  <div class="countdown-grid reveal reveal-d1">
+    <div class="cd-box"><span class="cd-num" id="cd-hari">--</span><span class="cd-label">Hari</span></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-box"><span class="cd-num" id="cd-jam">--</span><span class="cd-label">Jam</span></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-box"><span class="cd-num" id="cd-menit">--</span><span class="cd-label">Menit</span></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-box"><span class="cd-num" id="cd-detik">--</span><span class="cd-label">Detik</span></div>
+  </div>
+  <p class="reveal reveal-d2" style="margin-top:28px;color:rgba(250,247,242,0.35);font-size:0.82rem;letter-spacing:2px;font-style:italic">"Barakallahu laka wa baraka alaika wa jama'a bainakuma fi khair"</p>
 </section>
 
 <!-- PASANGAN -->
@@ -708,13 +862,37 @@
       <div class="event-name">Resepsi</div>
       <div class="event-detail"><span class="event-detail-icon">○</span> Ahad, 12 April 2026</div>
       <div class="event-detail"><span class="event-detail-icon">○</span> Sesi Resepsi:</div>
-      <div class="event-detail" style="margin-left:20px;font-size:0.85rem;margin-top:-8px"><span class="event-detail-icon" id="check-10-13">☐</span> Sesi 1: 10.30 – 13.00 WIB</div>
-      <div class="event-detail" style="margin-left:20px;font-size:0.85rem;margin-top:-8px"><span class="event-detail-icon" id="check-13-15">☐</span> Sesi 2: 13.30 – 15.30 WIB</div>
-      <div class="event-detail" style="margin-left:20px;font-size:0.85rem;margin-top:-8px"><span class="event-detail-icon" id="check-16-17">☐</span> Sesi 3: 16.00 – 17.00 WIB</div>
+      <div class="event-detail" style="margin-left:20px;font-size:0.85rem;margin-top:-8px"><span class="event-detail-icon" id="check-10-13">☐</span> Sesi 1: 10.30 – 12.30 WIB</div>
+      <div class="event-detail" style="margin-left:20px;font-size:0.85rem;margin-top:-8px"><span class="event-detail-icon" id="check-13-15">☐</span> Sesi 2: 13.00 – 15.00 WIB</div>
+      <div class="event-detail" style="margin-left:20px;font-size:0.85rem;margin-top:-8px"><span class="event-detail-icon" id="check-16-17">☐</span> Sesi 3: 15.30 – 17.00 WIB</div>
       <div class="event-detail"><span class="event-detail-icon">○</span> Jalan Gede III Kavling HVA no 30 Pare, Kediri</div>
-      <div style="margin-top:20px;border-radius:4px;overflow:hidden;border:2px solid var(--gold)">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d247.07779351461565!2d112.19903217620454!3d-7.763854413647865!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sen!2sid!4v1772960036266!5m2!1sen!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div style="margin-top:20px;overflow:hidden;border:2px solid var(--gold);position:relative;padding-bottom:56.25%;height:0;">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d247.07779351461565!2d112.19903217620454!3d-7.763854413647865!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sen!2sid!4v1772960036266!5m2!1sen!2sid" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
+      <a href="https://maps.google.com/?q=Jalan+Gede+III+Kavling+HVA+30+Pare+Kediri" target="_blank" style="display:block;margin-top:10px;text-align:center;padding:12px;background:var(--dark);color:var(--gold-light);font-size:0.8rem;letter-spacing:2px;text-decoration:none;border:1px solid rgba(201,168,76,0.3);">🗺 Buka di Google Maps</a>
+    </div>
+  </div>
+</section>
+
+<!-- DOA & AYAT -->
+<section id="doa" style="background:var(--warm);padding:72px 20px">
+  <div class="centered reveal" style="margin-bottom:48px">
+    <div class="section-tag">Firman Allah</div>
+    <div class="section-title">Doa &amp; Harapan</div>
+    <div class="thin-rule"></div>
+  </div>
+  <div class="doa-grid">
+    <div class="doa-card reveal reveal-left reveal-d1">
+      <div class="doa-icon">﴾</div>
+      <p class="doa-arabic">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا</p>
+      <p class="doa-terjemah">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya."</p>
+      <p class="doa-source">QS. Ar-Rum: 21</p>
+    </div>
+    <div class="doa-card reveal reveal-right reveal-d2">
+      <div class="doa-icon">✦</div>
+      <p class="doa-arabic" style="direction:ltr;font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;line-height:1.8">Barakallahu laka wa baraka alaika<br>wa jama'a bainakuma fi khair</p>
+      <p class="doa-terjemah">"Semoga Allah memberkahimu, dan memberkahi atasmu, serta mengumpulkan kalian berdua dalam kebaikan."</p>
+      <p class="doa-source">Doa Pernikahan</p>
     </div>
   </div>
 </section>
@@ -760,8 +938,6 @@
         <option value="1">1 orang (hanya saya)</option>
         <option value="2">2 orang</option>
         <option value="3">3 orang</option>
-        <option value="4">4 orang</option>
-        <option value="5+">5+ orang</option>
       </select>
     </div>
     <div class="form-group">
@@ -909,7 +1085,7 @@ const _DEMO = _su[1].startsWith('BAGIAN');
 // ====================================================
 
 // ---- ENCODE / DECODE ----
-const XOR_KEY = 'undangan2025';
+const XOR_KEY = 'undangan2026';
 function xorString(str, key) {
   return str.split('').map((c, i) =>
     String.fromCharCode(c.charCodeAt(0) ^ key.charCodeAt(i % key.length))
@@ -958,39 +1134,51 @@ function encodeForStorage(name) { return encodeGuestName(name); }
 
 // ---- PARALLAX ----
 (function() {
-  const hero = document.getElementById('hero');
-  const layers = hero.querySelectorAll('[data-speed]');
-
+  const hero  = document.getElementById('hero');
+  const left  = hero.querySelector('.floral-left');
+  const right = hero.querySelector('.floral-right');
+  const dots  = hero.querySelector('.parallax-dots');
+  const ring  = hero.querySelector('.parallax-ring');
   function onScroll() {
-    const scrollY = window.scrollY;
-    layers.forEach(el => {
-      const speed = parseFloat(el.getAttribute('data-speed') || 0);
-      el.style.transform = el.classList.contains('floral-left')
-        ? `rotate(-20deg) translateY(${scrollY * speed}px)`
-        : el.classList.contains('floral-right')
-          ? `rotate(20deg) translateY(${scrollY * speed}px)`
-          : `translateY(${scrollY * speed}px)`;
-    });
+    const y = window.scrollY;
+    if (left)  left.style.transform  = `translateY(${y * 0.4}px)`;
+    if (right) right.style.transform = `translateY(${y * 0.25}px)`;
+    if (dots)  dots.style.transform  = `translateY(${y * 0.3}px)`;
+    if (ring)  ring.style.transform  = `translateY(${y * 0.15}px)`;
   }
-
   window.addEventListener('scroll', onScroll, { passive: true });
 })();
 
-// ---- SCROLL REVEAL ----
+// ---- FLOATING PETALS ----
 (function() {
-  const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-  revealEls.forEach(el => io.observe(el));
+  const container = document.getElementById('petals');
+  if (!container) return;
+  const symbols = ['✿','❀','✾','❁','⚘'];
+  const colors  = ['rgba(201,168,76,0.5)','rgba(232,196,184,0.6)','rgba(201,168,76,0.3)'];
+  let count = 0;
+  function spawnPetal() {
+    if (count >= 10) return;
+    count++;
+    const el = document.createElement('span');
+    el.className = 'petal';
+    el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    const dur   = 9  + Math.random() * 12;
+    const delay = Math.random() * 2;
+    el.style.cssText = `left:${5 + Math.random()*90}%;bottom:-5%;font-size:${0.7+Math.random()*0.9}rem;color:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${dur}s;animation-delay:${delay}s;`;
+    container.appendChild(el);
+    setTimeout(() => { el.remove(); count--; }, (dur + delay) * 1000 + 500);
+  }
+  let petalInterval = null;
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) {
+      spawnPetal();
+      petalInterval = setInterval(spawnPetal, 2200);
+    } else {
+      clearInterval(petalInterval);
+    }
+  }, { threshold: 0.3 }).observe(document.getElementById('hero'));
 })();
+
 
 // ---- DATA ----
 // Daftar tamu yang admin tambah manual (localStorage — data Anda sendiri)
@@ -1057,9 +1245,9 @@ async function submitRSVP() {
 
 // ---- ADMIN ----
 let isLoggedIn = false;
-// Brute-force protection — max 5 percobaan, lalu lockout 5 menit
-let loginAttempts = parseInt(sessionStorage.getItem('_login_attempts') || '0');
-let loginLockedUntil = parseInt(sessionStorage.getItem('_login_locked') || '0');
+let _cachedPassHash  = null;
+let loginAttempts    = parseInt(sessionStorage.getItem('_login_attempts') || '0');
+let loginLockedUntil = parseInt(sessionStorage.getItem('_login_locked')   || '0');
 
 function openAdmin() {
   document.getElementById('adminPanel').style.display = 'block';
@@ -1070,21 +1258,43 @@ function closeAdmin() {
   document.getElementById('adminPanel').style.display = 'none';
   document.body.style.overflow = '';
 }
+function _setErr(msg) {
+  const el = document.getElementById('loginError');
+  el.textContent = msg; el.style.display = 'block';
+}
 
 async function checkPass() {
   const now = Date.now();
   if (now < loginLockedUntil) {
-    const mnt = Math.ceil((loginLockedUntil - now) / 60000);
-    document.getElementById('loginError').textContent = `Terlalu banyak percobaan. Coba lagi dalam ${mnt} menit.`;
-    document.getElementById('loginError').style.display = 'block';
+    _setErr(`Terlalu banyak percobaan. Coba lagi dalam ${Math.ceil((loginLockedUntil-now)/60000)} menit.`);
     return;
   }
 
   const pass = document.getElementById('adminPass').value;
-  const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pass));
-  const hashHex = [...new Uint8Array(hashBuffer)].map(x => x.toString(16).padStart(2,'0')).join('');
+  if (!pass) return;
 
-  if (hashHex === ADMIN_PASS_HASH) {
+  // Hash password di browser
+  const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pass));
+  const hashHex    = [...new Uint8Array(hashBuffer)].map(x => x.toString(16).padStart(2,'0')).join('');
+
+  // Ambil hash dari Sheet (sekali per sesi, lalu cache)
+  if (!_cachedPassHash) {
+    if (_DEMO) {
+      _cachedPassHash = ADMIN_PASS_HASH; // fallback demo (admin123)
+    } else {
+      try {
+        const res  = await fetch(`${_getUrl()}?action=getConfig&tok=${ADMIN_TOKEN}`);
+        const data = await res.json();
+        if (data.error) { _setErr('Gagal memuat konfigurasi. Cek ADMIN_TOKEN.'); return; }
+        _cachedPassHash = data.passHash;
+      } catch(e) {
+        _setErr('Gagal terhubung ke server. Cek koneksi internet.');
+        return;
+      }
+    }
+  }
+
+  if (hashHex === _cachedPassHash) {
     isLoggedIn = true;
     loginAttempts = 0;
     sessionStorage.removeItem('_login_attempts');
@@ -1097,12 +1307,12 @@ async function checkPass() {
     if (loginAttempts >= 5) {
       loginLockedUntil = Date.now() + 5 * 60000;
       sessionStorage.setItem('_login_locked', loginLockedUntil);
-      document.getElementById('loginError').textContent = 'Akun dikunci 5 menit karena terlalu banyak percobaan.';
+      _setErr('Akun dikunci 5 menit karena terlalu banyak percobaan.');
     } else {
-      document.getElementById('loginError').textContent = `Password salah. Sisa percobaan: ${5 - loginAttempts}`;
+      _setErr(`Password salah. Sisa percobaan: ${5 - loginAttempts}`);
     }
-    document.getElementById('loginError').style.display = 'block';
     document.getElementById('adminPass').value = '';
+    _cachedPassHash = null; // reset cache agar tidak bisa di-bruteforce
   }
 }
 
@@ -1319,17 +1529,44 @@ function copyGuestLink(encodedName) {
     .catch(()=>{ const ta=document.createElement('textarea'); ta.value=url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showToast('Link undangan disalin!'); });
 }
 
-// ---- TOAST ----
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2800);
-}
+// ---- COUNTDOWN TIMER ----
+(function() {
+  const target = new Date('2026-04-12T10:30:00+07:00').getTime();
+  function pad(n) { return String(n).padStart(2,'0'); }
+  function tick() {
+    const diff = target - Date.now();
+    if (diff <= 0) {
+      ['cd-hari','cd-jam','cd-menit','cd-detik'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.textContent = '00';
+      });
+      return;
+    }
+    const h = document.getElementById('cd-hari');
+    const j = document.getElementById('cd-jam');
+    const m = document.getElementById('cd-menit');
+    const d = document.getElementById('cd-detik');
+    if (h) h.textContent = pad(Math.floor(diff / 86400000));
+    if (j) j.textContent = pad(Math.floor((diff % 86400000) / 3600000));
+    if (m) m.textContent = pad(Math.floor((diff % 3600000)  / 60000));
+    if (d) d.textContent = pad(Math.floor((diff % 60000)    / 1000));
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+
+// ---- SCROLL REVEAL ----
+(function() {
+  const els = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  const io  = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(el => io.observe(el));
+})();
 
 // ---- INITIALIZE CHECKBOXES ----
-window.addEventListener('load', () => {
-  updateSessionCheckboxes();
-});
+window.addEventListener('load', () => { updateSessionCheckboxes(); });
 </script>
 </body>
 </html>
