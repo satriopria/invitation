@@ -1069,7 +1069,7 @@
 // 1. Ganti _su dengan URL Apps Script Anda (di-split biar tidak mudah dibaca)
 //    Contoh URL asli: https://script.google.com/macros/s/AKfycbxXXX/exec
 //    Split jadi dua bagian bebas, misalnya:
-const _su = ['https://script.google.com/macros/s/', 'AKfycbwg8r2jY5aNCx6HqyxRlIRqfEIe970R4WsNZyEXHhe-e5WNf52aKEiokasvDjgNFK3Y/exec'];
+const _su = ['https://script.google.com/macros/s/', 'AKfycbzP7cDknepKL5WV_Ovs8AM-sqQE7qWEab3ooDB25ITKNqG_dJZOxnXH8iwgMJQ8qDXe/exec'];
 
 // 2. ADMIN_PASS_HASH = SHA-256 hash dari password Anda
 //    Password default: admin123  →  hash-nya sudah diisi di bawah
@@ -1549,11 +1549,12 @@ function exportCSV() {
 
 // ---- TAMBAH TAMU MANUAL ----
 function addGuestManual() {
-  const name      = document.getElementById('newGuestName').value.trim();
-  const phone     = document.getElementById('newGuestPhone').value.trim();
-  const timeSlot  = document.getElementById('newGuestTimeSlot').value || '';
+  const name     = document.getElementById('newGuestName').value.trim();
+  const phone    = document.getElementById('newGuestPhone').value.trim();
+  const timeSlot = document.getElementById('newGuestTimeSlot').value || '';
   if (!name) { showToast('Nama tamu tidak boleh kosong'); return; }
 
+  // Simpan lokal
   if (!guestList.find(g => g.name.toLowerCase() === name.toLowerCase())) {
     guestList.unshift({ id:Date.now(), name, phone, timeSlot,
       time: new Date().toLocaleString('id-ID',{dateStyle:'short',timeStyle:'short'}) });
@@ -1561,6 +1562,7 @@ function addGuestManual() {
     renderStats(); renderTable(currentFilter);
   }
 
+  // Generate link
   const token = encodeGuestName(name);
   const url   = `${window.location.href.split('?')[0]}?t=${token}`;
   document.getElementById('linkResultName').textContent = name;
@@ -1570,6 +1572,21 @@ function addGuestManual() {
   document.getElementById('newGuestPhone').value = '';
   document.getElementById('newGuestTimeSlot').value = '';
   document.getElementById('newGuestName').focus();
+
+  // Kirim ke Sheet
+  if (!_DEMO) {
+    const params = new URLSearchParams({
+      action: 'addGuest',
+      tok:    ADMIN_TOKEN,
+      name,
+      phone,
+      slots:  timeSlot,
+    });
+    fetch(`${_getUrl()}?${params}`)
+      .then(r => r.json())
+      .then(d => showToast(d.status === 'ok' ? 'Tamu disimpan ke Sheet ✓' : 'Gagal simpan ke Sheet'))
+      .catch(() => showToast('Gagal simpan ke Sheet'));
+  }
 }
 
 function copyLinkResult() {
