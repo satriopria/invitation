@@ -179,10 +179,10 @@
   .guest-greeting, .guest-greeting-name { display: none !important; }
   .no-guest-name { display: none; }
   .floral-left, .floral-right {
-    position: absolute; pointer-events: none; will-change: transform; opacity: 0.12;
+    position: absolute; pointer-events: none; will-change: transform; opacity: 0.35;
   }
-  .floral-left  { bottom: 3%; left: -1%;  width: 220px; }
-  .floral-right { top:    8%; right: -1%; width: 180px; }
+  .floral-left  { bottom: 0%; left: -3%;  width: 280px; }
+  .floral-right { top:    5%; right: -3%; width: 240px; }
 
   .ornament-wrap {
     position: relative; z-index: 1;
@@ -191,9 +191,10 @@
     opacity: 0; animation: fadeUp .8s .15s forwards;
   }
   .ornament-svg {
-    width: 48px; height: 48px; margin-bottom: 10px;
+    width: 64px; height: 64px; margin-bottom: 10px;
     animation: spinSlow 18s linear infinite;
-    opacity: 0.75;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 6px rgba(201,168,76,0.4));
   }
   .ornament {
     font-family: 'Cormorant Garamond', serif;
@@ -736,8 +737,8 @@
 
   <!-- Animated SVG florals -->
   <div class="floral-left">
-    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="animation:spinSlow 30s linear infinite reverse;display:block;width:100%">
-      <g fill="none" stroke="#c9a84c" stroke-width="1">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="animation:spinSlow 30s linear infinite reverse;display:block;width:100%;filter:drop-shadow(0 0 8px rgba(201,168,76,0.3))">
+      <g fill="rgba(201,168,76,0.07)" stroke="#c9a84c" stroke-width="1.8">
         <ellipse cx="100" cy="60" rx="18" ry="42" transform="rotate(0   100 100)"/>
         <ellipse cx="100" cy="60" rx="18" ry="42" transform="rotate(45  100 100)"/>
         <ellipse cx="100" cy="60" rx="18" ry="42" transform="rotate(90  100 100)"/>
@@ -746,23 +747,23 @@
         <ellipse cx="100" cy="60" rx="18" ry="42" transform="rotate(225 100 100)"/>
         <ellipse cx="100" cy="60" rx="18" ry="42" transform="rotate(270 100 100)"/>
         <ellipse cx="100" cy="60" rx="18" ry="42" transform="rotate(315 100 100)"/>
-        <circle cx="100" cy="100" r="12" stroke-width="1.5"/>
-        <circle cx="100" cy="100" r="22" stroke-dasharray="4 6"/>
+        <circle cx="100" cy="100" r="12" fill="rgba(201,168,76,0.15)" stroke-width="2"/>
+        <circle cx="100" cy="100" r="22" fill="none" stroke-dasharray="4 6"/>
       </g>
     </svg>
   </div>
   <div class="floral-right">
-    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="animation:spinSlow 24s linear infinite;display:block;width:100%">
-      <g fill="none" stroke="#c9a84c" stroke-width="1">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="animation:spinSlow 24s linear infinite;display:block;width:100%;filter:drop-shadow(0 0 8px rgba(201,168,76,0.3))">
+      <g fill="rgba(201,168,76,0.07)" stroke="#c9a84c" stroke-width="1.8">
         <ellipse cx="100" cy="55" rx="14" ry="38" transform="rotate(0   100 100)"/>
         <ellipse cx="100" cy="55" rx="14" ry="38" transform="rotate(60  100 100)"/>
         <ellipse cx="100" cy="55" rx="14" ry="38" transform="rotate(120 100 100)"/>
         <ellipse cx="100" cy="55" rx="14" ry="38" transform="rotate(180 100 100)"/>
         <ellipse cx="100" cy="55" rx="14" ry="38" transform="rotate(240 100 100)"/>
         <ellipse cx="100" cy="55" rx="14" ry="38" transform="rotate(300 100 100)"/>
-        <circle cx="100" cy="100" r="10"/>
-        <circle cx="100" cy="100" r="20" stroke-dasharray="3 5"/>
-        <circle cx="100" cy="100" r="32" stroke-dasharray="1 8"/>
+        <circle cx="100" cy="100" r="10" fill="rgba(201,168,76,0.15)" stroke-width="2"/>
+        <circle cx="100" cy="100" r="20" fill="none" stroke-dasharray="3 5"/>
+        <circle cx="100" cy="100" r="32" fill="none" stroke-dasharray="1 8"/>
       </g>
     </svg>
   </div>
@@ -777,7 +778,7 @@
   <!-- Ornamen berputar -->
   <div class="ornament-wrap">
     <svg class="ornament-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <g fill="none" stroke="#c9a84c" stroke-width="1.2">
+      <g fill="rgba(201,168,76,0.1)" stroke="#c9a84c" stroke-width="1.8">
         <ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(0   50 50)"/>
         <ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(45  50 50)"/>
         <ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(90  50 50)"/>
@@ -786,7 +787,7 @@
         <ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(225 50 50)"/>
         <ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(270 50 50)"/>
         <ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(315 50 50)"/>
-        <circle cx="50" cy="50" r="6" fill="rgba(201,168,76,0.2)"/>
+        <circle cx="50" cy="50" r="6" fill="rgba(201,168,76,0.3)" stroke-width="1.5"/>
       </g>
     </svg>
     <div class="ornament">Undangan Pernikahan</div>
@@ -1068,7 +1069,7 @@
 // 1. Ganti _su dengan URL Apps Script Anda (di-split biar tidak mudah dibaca)
 //    Contoh URL asli: https://script.google.com/macros/s/AKfycbxXXX/exec
 //    Split jadi dua bagian bebas, misalnya:
-const _su = ['https://script.google.com/macros/s/', 'AKfycbySq1gKZRaKTWh3A68GMVClT4fMoHbdy10PhXIZMuZ_Wa6VUDm3dTkrRDFh_lbsryax/exec'];
+const _su = ['https://script.google.com/macros/s/', 'AKfycbyBX4jBiMreJ6sgg_pzeEnYCH83Bbbp5XDcxpFtNgdaPANAqzTvZ3shr0JROH794DyS/exec'];
 
 // 2. ADMIN_PASS_HASH = SHA-256 hash dari password Anda
 //    Password default: admin123  →  hash-nya sudah diisi di bawah
@@ -1133,6 +1134,31 @@ function encodeForStorage(name) { return encodeGuestName(name); }
   // Pre-fill RSVP
   const inp = document.getElementById('guestName');
   if (inp) inp.value = name;
+
+  // Centang sesi sesuai data di Sheet — fetch setelah halaman load
+  window.addEventListener('load', () => {
+    if (_DEMO) return;
+    const params = new URLSearchParams({ action: 'getGuestSlot', name });
+    fetch(`${_getUrl()}?${params}`)
+      .then(r => r.json())
+      .then(d => {
+        if (!d.slots) return;
+        const slots = d.slots.split(',').map(s => s.trim());
+        // Centang checkbox sesi di form RSVP
+        document.querySelectorAll('input[name="slot"]').forEach(cb => {
+          if (slots.some(s => s === cb.value)) {
+            cb.checked = true;
+            cb.closest('.rsvp-slot-card') && cb.closest('.rsvp-slot-card').classList.add('selected');
+          }
+        });
+        // Tampilkan slot group kalau ada sesi
+        if (slots.length > 0) {
+          const sg = document.getElementById('slotGroup');
+          if (sg) sg.style.display = 'flex';
+        }
+      })
+      .catch(() => {}); // silent fail — tidak mengganggu tamu
+  });
 })();
 
 // ---- PARALLAX ----
@@ -1349,7 +1375,7 @@ async function fetchRSVP() {
     // Kirim admin token — Apps Script akan tolak request tanpa token valid
     const res  = await fetch(`${_getUrl()}?action=get&tok=${ADMIN_TOKEN}`);
     const data = await res.json();
-    rsvpData = (data.rows || []).map(g => ({ ...g, timeSlot: g.slots || g.timeSlot || '' }));
+    rsvpData = (data.rows || []).map(g => ({ ...g, timeSlot: g.timeSlot || '' }));
     renderStats(); renderTable(currentFilter);
     updateSessionCheckboxes();
   } catch(e) {
@@ -1437,13 +1463,35 @@ function filterGuests(filter, btn) {
 }
 
 function deleteGuest(name) {
-  if (!confirm(`Hapus "${name}" dari tampilan?`)) return;
+  // Tawarkan dua pilihan
+  const choice = confirm(
+    `Hapus "${name}"?\n\n` +
+    `OK     → Hapus dari Sheet juga (permanen)\n` +
+    `Cancel → Batalkan`
+  );
+  if (!choice) return;
+
+  // Hapus dari lokal
   guestList = guestList.filter(g => g.name !== name);
   saveGuestList();
   rsvpData  = rsvpData.filter(g => g.name !== name);
   renderStats(); renderTable(currentFilter);
   updateSessionCheckboxes();
-  showToast('Tamu dihapus dari tampilan');
+
+  // Hapus dari Sheet
+  if (!_DEMO) {
+    const params = new URLSearchParams({
+      action: 'deleteGuest',
+      tok:    ADMIN_TOKEN,
+      name,
+    });
+    fetch(`${_getUrl()}?${params}`)
+      .then(r => r.json())
+      .then(d => showToast(d.status === 'ok' ? `"${name}" dihapus dari Sheet ✓` : 'Gagal hapus dari Sheet'))
+      .catch(() => showToast('Gagal hapus dari Sheet'));
+  } else {
+    showToast(`"${name}" dihapus`);
+  }
 }
 
 function updateGuestTime(name, timeSlot) {
@@ -1501,12 +1549,11 @@ function exportCSV() {
 
 // ---- TAMBAH TAMU MANUAL ----
 function addGuestManual() {
-  const name     = document.getElementById('newGuestName').value.trim();
-  const phone    = document.getElementById('newGuestPhone').value.trim();
-  const timeSlot = document.getElementById('newGuestTimeSlot').value || '';
+  const name      = document.getElementById('newGuestName').value.trim();
+  const phone     = document.getElementById('newGuestPhone').value.trim();
+  const timeSlot  = document.getElementById('newGuestTimeSlot').value || '';
   if (!name) { showToast('Nama tamu tidak boleh kosong'); return; }
 
-  // Simpan lokal dulu (optimistic)
   if (!guestList.find(g => g.name.toLowerCase() === name.toLowerCase())) {
     guestList.unshift({ id:Date.now(), name, phone, timeSlot,
       time: new Date().toLocaleString('id-ID',{dateStyle:'short',timeStyle:'short'}) });
@@ -1514,7 +1561,6 @@ function addGuestManual() {
     renderStats(); renderTable(currentFilter);
   }
 
-  // Generate link
   const token = encodeGuestName(name);
   const url   = `${window.location.href.split('?')[0]}?t=${token}`;
   document.getElementById('linkResultName').textContent = name;
@@ -1524,24 +1570,6 @@ function addGuestManual() {
   document.getElementById('newGuestPhone').value = '';
   document.getElementById('newGuestTimeSlot').value = '';
   document.getElementById('newGuestName').focus();
-
-  // Simpan ke Sheet (background, tidak block UI)
-  if (!_DEMO) {
-    const params = new URLSearchParams({
-      action: 'addGuest',
-      tok:    ADMIN_TOKEN,
-      name,
-      phone,
-      slots:  timeSlot,
-    });
-    fetch(`${_getUrl()}?${params}`)
-      .then(r => r.json())
-      .then(d => {
-        if (d.status === 'ok') showToast('Tamu disimpan ke Sheet ✓');
-        else showToast('Gagal simpan ke Sheet');
-      })
-      .catch(() => showToast('Gagal simpan ke Sheet'));
-  }
 }
 
 function copyLinkResult() {
