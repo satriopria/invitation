@@ -1135,29 +1135,57 @@ function encodeForStorage(name) { return encodeGuestName(name); }
   const inp = document.getElementById('guestName');
   if (inp) inp.value = name;
 
-  // Centang sesi sesuai data di Sheet — fetch setelah halaman load
+  // Centang sesi di section Acara sesuai data Sheet
   window.addEventListener('load', () => {
     if (_DEMO) return;
     const params = new URLSearchParams({ action: 'getGuestSlot', name });
     fetch(`${_getUrl()}?${params}`)
       .then(r => r.json())
       .then(d => {
-        if (!d.slots) return;
+        if (!d.slots || !d.slots.trim()) return;
         const slots = d.slots.split(',').map(s => s.trim());
-        // Centang checkbox sesi di form RSVP
-        document.querySelectorAll('input[name="slot"]').forEach(cb => {
-          if (slots.some(s => s === cb.value)) {
-            cb.checked = true;
-            cb.closest('.rsvp-slot-card') && cb.closest('.rsvp-slot-card').classList.add('selected');
+
+        // Map nilai sesi dari Sheet ke ID elemen di section Acara
+        const slotMap = {
+          '10:30-13:00': 'check-10-13',
+          '13:30-15:30': 'check-13-15',
+          '16:00-17:00': 'check-16-17',
+        };
+
+        slots.forEach(slot => {
+          const elId = slotMap[slot];
+          if (!elId) return;
+          const el = document.getElementById(elId);
+          if (el) {
+            el.textContent = '☑';
+            el.style.color = 'var(--gold)';
+            el.style.fontWeight = '700';
+            // Highlight baris sesinya
+            const row = el.closest('.event-detail');
+            if (row) {
+              row.style.color = 'var(--dark)';
+              row.style.fontWeight = '600';
+              row.style.background = 'rgba(201,168,76,0.08)';
+              row.style.borderLeft = '3px solid var(--gold)';
+              row.style.paddingLeft = '8px';
+              row.style.borderRadius = '2px';
+            }
           }
         });
-        // Tampilkan slot group kalau ada sesi
-        if (slots.length > 0) {
-          const sg = document.getElementById('slotGroup');
-          if (sg) sg.style.display = 'flex';
+
+        // Tambah label "Sesi Anda" di atas slot section
+        const firstCheck = document.getElementById('check-10-13');
+        if (firstCheck) {
+          const label = document.createElement('div');
+          label.style.cssText = 'font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;margin-top:12px;';
+          label.textContent = '✦ Sesi Kehadiran Anda';
+          const parent = firstCheck.closest('.event-detail');
+          if (parent && parent.parentNode) {
+            parent.parentNode.insertBefore(label, parent);
+          }
         }
       })
-      .catch(() => {}); // silent fail — tidak mengganggu tamu
+      .catch(() => {}); // silent fail
   });
 })();
 
@@ -1576,11 +1604,7 @@ function addGuestManual() {
   // Kirim ke Sheet
   if (!_DEMO) {
     const params = new URLSearchParams({
-      action: 'addGuest',
-      tok:    ADMIN_TOKEN,
-      name,
-      phone,
-      slots:  timeSlot,
+      action: 'addGuest', tok: ADMIN_TOKEN, name, phone, slots: timeSlot,
     });
     fetch(`${_getUrl()}?${params}`)
       .then(r => r.json())
