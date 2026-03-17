@@ -697,6 +697,14 @@
     .doa-grid { grid-template-columns: 1fr; }
     .cd-box { padding: 16px 18px; min-width: 68px; }
     .cd-sep { font-size: 1.8rem; }
+    /* Ornamen lebih kecil & transparan di mobile */
+    .floral-left  { width: 130px; opacity: 0.15; left: -4%; }
+    .floral-right { width: 110px; opacity: 0.15; right: -4%; }
+    .ornament-svg { width: 44px; height: 44px; }
+    /* Acara font lebih besar di mobile */
+    .event-detail { font-size: 1rem; }
+    .event-name   { font-size: 1.5rem; }
+    .event-type   { font-size: 0.75rem; }
   }
 
   .empty-state {
@@ -722,7 +730,6 @@
   <div class="logo">Satrio & Sherly</div>
   <div class="nav-links">
     <a href="#pasangan">Pasangan</a>
-    <a href="#countdown">Hitung Mundur</a>
     <a href="#acara">Acara</a>
     <a href="#doa">Doa</a>
     <a href="#rsvp">RSVP</a>
@@ -1069,7 +1076,7 @@
 // 1. Ganti _su dengan URL Apps Script Anda (di-split biar tidak mudah dibaca)
 //    Contoh URL asli: https://script.google.com/macros/s/AKfycbxXXX/exec
 //    Split jadi dua bagian bebas, misalnya:
-const _su = ['https://script.google.com/macros/s/', 'AKfycbzniJMHVRtoRyX4H8iYoNj_Qkg1Vd9RMcxroUbmJyUbsL-H5QFlDOHInL-EqI0yB5e6/exec'];
+const _su = ['https://script.google.com/macros/s/', 'AKfycbzP7cDknepKL5WV_Ovs8AM-sqQE7qWEab3ooDB25ITKNqG_dJZOxnXH8iwgMJQ8qDXe/exec'];
 
 // 2. ADMIN_PASS_HASH = SHA-256 hash dari password Anda
 //    Password default: admin123  →  hash-nya sudah diisi di bawah
@@ -1403,7 +1410,7 @@ async function fetchRSVP() {
     // Kirim admin token — Apps Script akan tolak request tanpa token valid
     const res  = await fetch(`${_getUrl()}?action=get&tok=${ADMIN_TOKEN}`);
     const data = await res.json();
-    rsvpData = (data.rows || []).map(g => ({ ...g, timeSlot: g.timeSlot || '' }));
+    rsvpData = (data.rows || []).map(g => ({ ...g, timeSlot: g.slots || g.timeSlot || '' }));
     renderStats(); renderTable(currentFilter);
     updateSessionCheckboxes();
   } catch(e) {
@@ -1459,7 +1466,7 @@ function renderTable(filter) {
 
   body.innerHTML = rows.map((g, i) => {
     let timeSlotCell = '—';
-    if (g.status === 'hadir') {
+    if (g.status !== 'tidak') {
       const selected = g.timeSlot || '–';
       timeSlotCell = `<select onchange="updateGuestTime('${g.name.replace(/'/g,"\\'")}', this.value)" style="padding:4px 6px;font-size:.78rem;background:var(--warm);border:1px solid rgba(201,168,76,0.3);border-radius:3px;color:var(--text)">
         <option value="–" ${selected === '–' || selected === '' ? 'selected' : ''}>–</option>
