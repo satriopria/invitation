@@ -1568,10 +1568,10 @@ function updateSessionCheckboxes() {
 
 function exportCSV() {
   const all    = mergedGuests();
-  const header = ['Nama','No HP','Status','Jumlah Tamu','Waktu','Ucapan'];
+  const header = ['Nama','No HP','Status','Sesi','Jumlah Tamu','Waktu','Ucapan'];
   const rows   = all.map(g => [
     `"${g.name}"`,`"${g.phone||''}"`,`"${statusLabel[g.status]||g.status}"`,
-    g.count,`"${g.time||''}"`,`"${(g.message||'').replace(/"/g,'""')}"`
+    `"${g.timeSlot||''}"`,g.count,`"${g.time||''}"`,`"${(g.message||'').replace(/"/g,'""')}"`
   ]);
   const csv  = [header,...rows].map(r=>r.join(',')).join('\n');
   const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
