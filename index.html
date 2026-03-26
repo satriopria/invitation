@@ -878,9 +878,9 @@
       <div class="event-detail" style="margin-left:20px;margin-top:-4px"><span class="event-detail-icon" id="check-16-17">☐</span> Sesi 3: 15.30 – 17.00 WIB</div>
       <div class="event-detail"><span class="event-detail-icon">○</span> Jalan Gede III Kavling HVA no 30 Pare, Kediri</div>
       <div style="margin-top:20px;overflow:hidden;border:2px solid var(--gold);position:relative;padding-bottom:56.25%;height:0;">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d247.07779351461565!2d112.19903217620454!3d-7.763854413647865!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sen!2sid!4v1772960036266!5m2!1sen!2sid" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <iframe src="https://maps.google.com/maps?q=loc:-7.763782,112.199060&output=embed" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
-      <a href="https://maps.google.com/?q=Jalan+Gede+III+Kavling+HVA+30+Pare+Kediri" target="_blank" style="display:block;margin-top:10px;text-align:center;padding:12px;background:var(--dark);color:var(--gold-light);font-size:0.8rem;letter-spacing:2px;text-decoration:none;border:1px solid rgba(201,168,76,0.3);">🗺 Buka di Google Maps</a>
+      <a href="https://maps.app.goo.gl/r6r7Vs5qyGJGbKkK9" target="_blank" style="display:block;margin-top:10px;text-align:center;padding:12px;background:var(--dark);color:var(--gold-light);font-size:0.8rem;letter-spacing:2px;text-decoration:none;border:1px solid rgba(201,168,76,0.3);">🗺 Buka di Google Maps</a>
     </div>
   </div>
 </section>
@@ -1018,9 +1018,9 @@
             <input type="text" id="newGuestPhone" placeholder="0812 xxxx xxxx" onkeydown="if(event.key==='Enter')addGuestManual()">
           </div>
           <div class="add-guest-field">
-            <label>Sesi Resepsi (opsional)</label>
-            <select id="newGuestTimeSlot" onkeydown="if(event.key==='Enter')addGuestManual()">
-              <option value="">Belum ditentukan</option>
+            <label>Sesi Resepsi <span style="color:var(--blush)">*</span></label>
+            <select id="newGuestTimeSlot" onkeydown="if(event.key==='Enter')addGuestManual()" required>
+              <option value="">-- Pilih Sesi --</option>
               <option value="10:30-12:30">Sesi 1: 10:30-12:30</option>
               <option value="13:00-15:00">Sesi 2: 13:00-15:00</option>
               <option value="15:30-17:00">Sesi 3: 15:30-17:00</option>
@@ -1145,8 +1145,25 @@ function encodeForStorage(name) { return encodeGuestName(name); }
   // Centang sesi di section Acara sesuai data Sheet
   window.addEventListener('load', () => {
     if (_DEMO) return;
-    const params = new URLSearchParams({ action: 'getGuestSlot', name });
+    
+    // Check status guest di sheet
+    const params = new URLSearchParams({ action: 'checkSubmitted', name });
     fetch(`${_getUrl()}?${params}`)
+      .then(r => r.json())
+      .then(d => {
+        const status = d.status; // null = tidak ada, 'Diundang' = generate tapi belum submit, 'Hadir'/'Tidak'/'Ragu' = sudah submit
+        
+        // Kalau sudah submit RSVP (status bukan null dan bukan "Diundang"), hide form
+        if (status && status !== 'Diundang') {
+          document.getElementById('rsvpForm').style.display = 'none';
+          document.getElementById('rsvpSuccess').style.display = 'block';
+        }
+      })
+      .catch(() => {}); // silent fail
+
+    // Centang sesi di section Acara sesuai data Sheet
+    const params2 = new URLSearchParams({ action: 'getGuestSlot', name });
+    fetch(`${_getUrl()}?${params2}`)
       .then(r => r.json())
       .then(d => {
         if (!d.slots || !d.slots.trim()) return;
@@ -1468,12 +1485,17 @@ function renderTable(filter) {
     let timeSlotCell = '—';
     if (g.status !== 'tidak') {
       const selected = g.timeSlot || '–';
-      timeSlotCell = `<select onchange="updateGuestTime('${g.name.replace(/'/g,"\\'")}', this.value)" style="padding:4px 6px;font-size:.78rem;background:var(--warm);border:1px solid rgba(201,168,76,0.3);border-radius:3px;color:var(--text)">
+      // Jika sudah ada sesi (bukan '–'), jadikan read-only; jika belum, tetap bisa edit
+      if (selected && selected !== '–') {
+        timeSlotCell = `<span style="padding:4px 6px;font-size:.78rem;color:var(--gold);font-weight:500">${selected}</span>`;
+      } else {
+        timeSlotCell = `<select onchange="updateGuestTime('${g.name.replace(/'/g,"\\'")}', this.value)" style="padding:4px 6px;font-size:.78rem;background:var(--warm);border:1px solid rgba(201,168,76,0.3);border-radius:3px;color:var(--text)">
         <option value="–" ${selected === '–' || selected === '' ? 'selected' : ''}>–</option>
         <option value="10:30-12:30" ${selected === '10:30-12:30' ? 'selected' : ''}>10:30-12:30</option>
         <option value="13:00-15:00" ${selected === '13:00-15:00' ? 'selected' : ''}>13:00-15:00</option>
         <option value="15:30-17:00" ${selected === '15:30-17:00' ? 'selected' : ''}>15:30-17:00</option>
       </select>`;
+      }
     }
     return `
     <tr>
@@ -1588,6 +1610,8 @@ function addGuestManual() {
   const phone    = document.getElementById('newGuestPhone').value.trim();
   const timeSlot = document.getElementById('newGuestTimeSlot').value || '';
   if (!name) { showToast('Nama tamu tidak boleh kosong'); return; }
+  if (!timeSlot) { showToast('Sesi resepsi harus dipilih'); return; }
+  if (!timeSlot) { showToast('Sesi resepsi harus dipilih'); return; }
 
   // Simpan lokal
   if (!guestList.find(g => g.name.toLowerCase() === name.toLowerCase())) {
